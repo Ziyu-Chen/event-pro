@@ -10,6 +10,9 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "express": "^4.17.1",
+    "knex": "^0.20.6",
+    "pg": "^7.17.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
@@ -19,7 +22,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "migrate": "knex migrate:latest --knexfile server/knexfile.js",
+    "rollback": "knex migrate:rollback --knexfile server/knexfile.js",
+    "migrate:make": "knex migrate:make --knexfile server/knexfile.js"
   },
   "eslintConfig": {
     "extends": "react-app"
