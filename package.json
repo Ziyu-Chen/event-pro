@@ -30,10 +30,11 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start && yarn server",
+    "start": "react-scripts start && yarn migrate && yarn serve",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "serve": "node server/index.js",
     "server": "nodemon server/index.js",
     "migrate": "knex migrate:latest --knexfile server/knexfile.js",
     "rollback": "knex migrate:rollback --knexfile server/knexfile.js",
