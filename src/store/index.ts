@@ -22,7 +22,8 @@ function reducer(state: State = initialState, action: any): State{
     case SET_USER: {
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
+        loggedIn: true
       }
     }
     case TOGGLE_LOGIN: {

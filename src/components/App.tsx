@@ -1,5 +1,6 @@
 import React from "react";
 import FirstPage from "./FirstPage";
+import SecondPage from "./SecondPage";
 import { connect } from "react-redux";
 import './App.css';
 import { State } from "../store/types";
@@ -24,7 +25,7 @@ class App extends React.Component<AppProps, {}> {
             <img src={logo} style={{width:"70px"}}/>
           </Toolbar>
         </AppBar>
-        {!this.props.loggedIn ? <FirstPage /> : null}
+        {!this.props.loggedIn ? <FirstPage /> : <SecondPage />}
       </div>
     );
   }
