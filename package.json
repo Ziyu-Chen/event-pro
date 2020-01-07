@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "yarn migrate && yarn serve && react-scripts build",
+    "build": "react-scripts build && yarn migrate && yarn serve",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "node server/index.js",
