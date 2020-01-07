@@ -30,7 +30,6 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "yarn migrate && yarn serve",
     "build": "react-scripts build",
     "client:serve": "react-scripts start",
     "test": "react-scripts test",
