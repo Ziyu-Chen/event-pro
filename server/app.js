@@ -37,11 +37,15 @@ app.get("/api/users", async (req, res) => {
     const [email, password] = atob(req.headers.authorization.slice(6)).split(":")
     console.log(req.headers.authorization);
     const response = await getUser(email, password);
-    const user = response[0];
-    res.json(user).status(200);
+    if (response.length === 1) {
+      const user = response[0];
+      res.json(user).status(200);
+    } else {
+      res.sendStatus(401)
+    }
   } catch(err) {
     console.log(err);
-    res.sendStatus(401);
+    res.sendStatus(500);
   }
 })
 

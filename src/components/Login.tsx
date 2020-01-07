@@ -2,37 +2,35 @@ import React from "react";
 
 import {
   Button,
-  // IconButton,
-  // Select,
-  // MenuItem,
   FormControl,
   Dialog,
   DialogTitle,
   DialogContentText,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Link
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { setUser } from "../store/actions"
+import { setUser, toggleLogin } from "../store/actions"
 import axios from "axios";
 import { connect } from "react-redux";
 
-interface loginState {
+interface LoginState {
   email: string
   password: string
-  succeeded: boolean
   failed: boolean
+  error: string
 }
 
-interface loginProps {
-  getUser: (email:string, password:string) => void
+interface LoginProps {
+  getUser: (email:string, password:string) => Promise<number>
+  toggleLogin: () => void
 }
 
 const mapDispatchToProps = (dispatch: any) => ({
   getUser: (email:string, password:string) => {
     const basicAuth = 'Basic ' + btoa(email + ":" + password);
-    console.log(basicAuth);
-    axios(
+    return axios(
       {
         method: 'get',
         url: `/api/users`,
@@ -40,29 +38,40 @@ const mapDispatchToProps = (dispatch: any) => ({
       }
     )
     .then((response) => {
-      console.log(response.data)
       dispatch(setUser(response.data))
+      return response.status
     })
     .catch((error) => {
-      console.log(error.response)
+      return error.response.status  
     })
-  }
+  },
+  toggleLogin: () => dispatch(toggleLogin())
 })
 
 
 
-class Login extends React.Component<any, loginState>{
-  constructor(props:{}) {
+class Login extends React.Component<LoginProps, LoginState>{
+  constructor(props:LoginProps) {
     super(props)
     this.state = {
       email: "",
       password: "",
-      succeeded: false,
-      failed: false
+      failed: false,
+      error: ""
     }
   }
-  handleSubmit = (email:string, password:string) => {
-    this.props.getUser(email, password);
+  handleDialogToggle = () => {
+    this.setState({failed: false})
+  }
+  handleSubmit = async (email:string, password:string) => {
+    const statusCode = await this.props.getUser(email, password);
+    if (statusCode === 200) {
+
+    } else if (statusCode === 401) {
+      this.setState({failed: true, error: "Your password or email address is not correct."})
+    } else if (statusCode === 500) {
+      this.setState({failed: true, error: "The server is down."})
+    }
   }
   render() {
     return (
@@ -107,9 +116,23 @@ class Login extends React.Component<any, loginState>{
         </FormControl>
         <br/>
         <br/>
-        <Button type="submit" variant="contained" color="primary">Submit</Button>
-        
+        {
+          this.state.email && this.state.password ? 
+          <Button type="submit" variant="contained" color="primary">Submit</Button> :
+          <Button variant="contained">Submit</Button>
+        }
       </ValidatorForm>
+      <br/>
+      <Link color="inherit" onClick={this.props.toggleLogin}>Do not have an account yet?</Link>
+      <Dialog open={this.state.failed}>
+        <DialogTitle>Login Failed</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{this.state.error} Please try again! </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleDialogToggle} variant="contained" color="primary">Okay</Button>
+        </DialogActions>
+      </Dialog>
     </div>
     )
   }

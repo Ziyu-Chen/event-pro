@@ -1,16 +1,33 @@
 import React from "react";
-import Login from "./Login";
-import Register from "./Register";
+import FirstPage from "./FirstPage";
+import { connect } from "react-redux";
 import './App.css';
-
-
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <Login />
-      <Register />
-    </div>
-  );
+import { State } from "../store/types";
+import { AppBar, Toolbar, Button } from "@material-ui/core";
+import logo from "../img/logo.png"
+interface AppProps {
+  loggedIn: boolean
 }
 
-export default App;
+const mapStateToProps = (state: State) => (
+  {
+    loggedIn: state.loggedIn
+  }
+)
+
+class App extends React.Component<AppProps, {}> {
+  render() {
+    return (
+      <div className="App">
+        <AppBar position="static">
+          <Toolbar>
+            <img src={logo} style={{width:"70px"}}/>
+          </Toolbar>
+        </AppBar>
+        {!this.props.loggedIn ? <FirstPage /> : null}
+      </div>
+    );
+  }
+}
+
+export default connect(mapStateToProps)(App);

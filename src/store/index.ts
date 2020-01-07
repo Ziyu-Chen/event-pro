@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import { State, SET_USER } from "./types";
+import { State, SET_USER, TOGGLE_LOGIN } from "./types";
 
 const initialState: State = {
   user: {
@@ -11,15 +11,24 @@ const initialState: State = {
     logoUrl: "",
     id: -1
   },
-  events: []
+  events: [],
+  loggedIn: false,
+  showLogin: true
+
 }
 
 function reducer(state: State = initialState, action: any): State{
   switch(action.type) {
-    case SET_USER:{
+    case SET_USER: {
       return {
         ...state,
         user: action.payload
+      }
+    }
+    case TOGGLE_LOGIN: {
+      return {
+        ...state,
+        showLogin: !state.showLogin
       }
     }
     default: {

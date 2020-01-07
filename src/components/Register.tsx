@@ -9,11 +9,14 @@ import {
   DialogTitle,
   DialogContentText,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Link
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { User } from "../store/types";
 import axios from "axios";
+import { toggleLogin } from "../store/actions";
+import { connect } from "react-redux"
 
 interface RegisterState {
   succeeded: boolean
@@ -21,8 +24,16 @@ interface RegisterState {
   error: string
 }
 
-export default class Register extends React.Component<{}, User & RegisterState>{
-  constructor(props:{}) {
+interface RegisterProps {
+  toggleLogin: () => void
+}
+
+const mapDispatchToProps = (dispatch: any) => ({
+  toggleLogin: () => dispatch(toggleLogin())
+})
+
+class Register extends React.Component<RegisterProps, User & RegisterState>{
+  constructor(props:RegisterProps) {
     super(props)
     this.state = {
       email: "",
@@ -196,6 +207,9 @@ export default class Register extends React.Component<{}, User & RegisterState>{
         </FormControl>
         <br/>
         {this.state.email && this.state.password && this.state.name && this.state.password === this.state.confirmPassword?<Button variant="contained" color="primary" type="submit">Submit</Button>:<Button variant="contained">Please Complete the Form</Button>}
+        <br/>
+        <br/>
+        <Link color="inherit" onClick={this.props.toggleLogin}>Have an account already?</Link>
       </ValidatorForm>
       <Dialog open={this.state.succeeded}>
         <DialogTitle>Successfully Created</DialogTitle>
@@ -219,3 +233,6 @@ export default class Register extends React.Component<{}, User & RegisterState>{
     )
   }
 }
+
+
+export default connect(null, mapDispatchToProps)(Register)

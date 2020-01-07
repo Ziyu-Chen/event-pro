@@ -28,6 +28,10 @@ export interface Event {
 export interface State {
   user: User
   events: Event[]
+  loggedIn: boolean
+  showLogin: boolean
 }
 
-export const SET_USER = "SET_USER"
+export const SET_USER = "SET_USER";
+
+export const TOGGLE_LOGIN = "TOGGLE_LOGIN";
