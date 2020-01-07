@@ -30,8 +30,8 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start && yarn migrate && yarn serve",
-    "build": "react-scripts build",
+    "start": "react-scripts start",
+    "build": "yarn migrate && yarn serve && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "node server/index.js",
