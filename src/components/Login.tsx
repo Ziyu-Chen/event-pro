@@ -69,7 +69,7 @@ class Login extends React.Component<LoginProps, LoginState>{
 
     } else if (statusCode === 401) {
       this.setState({password: "", failed: true, error: "Your password or email address is not correct."})
-    } else if (statusCode === 500) {
+    } else {
       this.setState({password: "", failed: true, error: "The server is down."})
     }
   }
