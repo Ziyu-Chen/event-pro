@@ -54,7 +54,6 @@ const mapDispatchToProps = (dispatch: any) => ({
       headers: { authorization: basicAuth }
     })
       .then(response => {
-        console.log(response.data);
         dispatch(setEvents(response.data));
         return response.status;
       })

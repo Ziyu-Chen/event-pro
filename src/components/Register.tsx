@@ -10,7 +10,6 @@ import {
   Link
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { User } from "../store/types";
 import axios from "axios";
 import { toggleLogin } from "../store/actions";
 import { connect } from "react-redux";

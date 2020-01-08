@@ -1,5 +1,11 @@
 import { createStore } from "redux";
-import { State, SET_USER, TOGGLE_LOGIN, SET_EVENTS } from "./types";
+import {
+  State,
+  SET_USER,
+  TOGGLE_LOGIN,
+  SET_EVENTS,
+  SET_EDITTED_EVENT
+} from "./types";
 
 const initialState: State = {
   user: {
@@ -13,7 +19,8 @@ const initialState: State = {
   },
   events: [],
   loggedIn: false,
-  showLogin: true
+  showLogin: true,
+  edittedEventId: 0
 };
 
 function reducer(state: State = initialState, action: any): State {
@@ -35,6 +42,12 @@ function reducer(state: State = initialState, action: any): State {
       return {
         ...state,
         events: action.payload
+      };
+    }
+    case SET_EDITTED_EVENT: {
+      return {
+        ...state,
+        edittedEventId: action.payload
       };
     }
     default: {

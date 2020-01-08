@@ -1,5 +1,11 @@
 const express = require("express");
-const { getUser, createUser, getEvents, createEvent } = require("./model");
+const {
+  getUser,
+  createUser,
+  getEvents,
+  createEvent,
+  updateEvent
+} = require("./model");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
@@ -91,6 +97,22 @@ app.post("/api/events", async (req, res) => {
     const event = req.body;
     console.log(event);
     const response = await createEvent(event);
+    if (response === "success") {
+      res.sendStatus(201);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
+
+app.put("/api/events", async (req, res) => {
+  try {
+    const event = req.body;
+    console.log(event);
+    const response = await updateEvent(event);
     if (response === "success") {
       res.sendStatus(201);
     } else {

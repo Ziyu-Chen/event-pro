@@ -9,17 +9,18 @@ import {
   DialogActions,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Typography
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { State } from "../store/types";
+import { State, Event } from "../store/types";
 import { connect } from "react-redux";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
 import categories from "../data/categories.json";
 import axios from "axios";
 import { setEvents } from "../store/actions";
 
-interface BuildEventState {
+interface EditEventState {
   name: string;
   category: string;
   startingDate: string;
@@ -36,17 +37,21 @@ interface BuildEventState {
   error: string;
 }
 
-interface BuildEventProps {
-  id: number;
+interface EditEventProps {
   email: string;
   password: string;
+  id: number;
+  events: Event[];
+  edittedEventId: number;
   getEvents: (email: string, password: string) => Promise<number>;
 }
 
 const mapStateToProps = (state: State) => ({
   id: state.user.id,
   email: state.user.email,
-  password: state.user.password
+  password: state.user.password,
+  events: state.events,
+  edittedEventId: state.edittedEventId
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -69,21 +74,24 @@ const mapDispatchToProps = (dispatch: any) => ({
   }
 });
 
-class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
-  constructor(props: BuildEventProps) {
+class EditEvent extends React.Component<EditEventProps, EditEventState> {
+  constructor(props: EditEventProps) {
     super(props);
+    const event = this.props.events.filter((event: Event) => {
+      return event.id === this.props.edittedEventId;
+    })[0];
     this.state = {
-      name: "",
-      category: "",
-      startingDate: "",
-      endingDate: "",
-      description: "",
-      photoUrl: "",
-      countryCode: "",
-      city: "",
-      address: "",
-      price: 0,
-      currencyCode: "",
+      name: event.name,
+      category: event.category,
+      startingDate: event.startingDate,
+      endingDate: event.endingDate,
+      description: event.description,
+      photoUrl: event.photoUrl,
+      countryCode: event.countryCode,
+      city: event.city,
+      address: event.address,
+      price: event.price,
+      currencyCode: event.currencyCode,
       succeeded: false,
       failed: false,
       error: ""
@@ -115,6 +123,7 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
     });
   };
   handleSubmit = (
+    edittedEventId: number,
     name: string,
     category: string,
     startingDate: string,
@@ -129,6 +138,7 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
     creatorId: number
   ) => {
     const event = {
+      id: edittedEventId,
       name,
       category,
       startingDate,
@@ -143,7 +153,7 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
       creatorId
     };
     axios({
-      method: "post",
+      method: "put",
       url: "/api/events",
       data: event
     })
@@ -156,17 +166,18 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
       .catch(error => {
         this.setState({
           failed: true,
-          error: "Your event has not been created."
+          error: "Your event has not been updated."
         });
       });
   };
   render() {
     return (
       <div className="build-event">
-        <h1>Build Event</h1>
+        <h1>Edit Event</h1>
         <ValidatorForm
           onSubmit={() => {
             this.handleSubmit(
+              this.props.edittedEventId,
               this.state.name,
               this.state.category,
               this.state.startingDate,
@@ -197,20 +208,7 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
           />
           <br />
           <br />
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select
-              fullWidth
-              onChange={(e: any) => {
-                this.setState({ category: String(e.target.value) });
-              }}
-            >
-              {categories.map((category: string) => (
-                <MenuItem value={category}>{category}</MenuItem>
-              ))}
-            </Select>
-            <div id="helper-text">Cannot be changed once created</div>
-          </FormControl>
+          <Typography>Category: {this.state.category}</Typography>
           <br />
           <br />
           <TextValidator
@@ -281,30 +279,14 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
           />
           <br />
           <br />
-          <FormControl>
-            <InputLabel>Country</InputLabel>
-            <Select
-              fullWidth
-              onChange={e => {
-                const [countryCode, currencyCode] = String(
-                  e.target.value
-                ).split("||");
-                this.setState({
-                  countryCode,
-                  currencyCode
-                });
-              }}
-            >
-              {countriesToCurrencies.map((item: any) => (
-                <MenuItem
-                  value={[item.countryCode, item.currencyCode].join("||")}
-                >
-                  {item.country}
-                </MenuItem>
-              ))}
-            </Select>
-            <div id="helper-text">Cannot be changed once created</div>
-          </FormControl>
+          <Typography>
+            Country:{" "}
+            {
+              countriesToCurrencies.filter(item => {
+                return item.countryCode === this.state.countryCode;
+              })[0].country
+            }
+          </Typography>
           <br />
           <br />
           <TextValidator
@@ -379,10 +361,10 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
           )}
         </ValidatorForm>
         <Dialog open={this.state.succeeded}>
-          <DialogTitle>Successfully Created</DialogTitle>
+          <DialogTitle>Successfully Updated</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Congratulations! You have successfully created an event!
+              Congratulations! You have successfully updated this event!
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -417,4 +399,4 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuildEvent);
+export default connect(mapStateToProps, mapDispatchToProps)(EditEvent);

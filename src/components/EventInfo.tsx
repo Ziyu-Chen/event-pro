@@ -7,7 +7,7 @@ import {
   Button
 } from "@material-ui/core";
 import { User, State, Event } from "../store/types";
-import { toggleLogin } from "../store/actions";
+import { toggleLogin, setEdittedEvent } from "../store/actions";
 import { connect } from "react-redux";
 import moment from "moment";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
@@ -15,8 +15,13 @@ const mapStateToProps = (state: State) => ({
   events: state.events
 });
 
+const mapDispatchToProps = (dispatch: any) => ({
+  setEdittedEvent: (id: number) => dispatch(setEdittedEvent(id))
+});
+
 interface EventInfoProps {
   events: Event[];
+  setEdittedEvent: (id: number) => void;
 }
 
 class EventInfo extends React.Component<EventInfoProps, {}> {
@@ -52,7 +57,9 @@ class EventInfo extends React.Component<EventInfoProps, {}> {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button>Edit</Button>
+              <Button onClick={() => this.props.setEdittedEvent(event.id)}>
+                Edit
+              </Button>
             </CardActions>
           </Card>
         ))}
@@ -61,4 +68,4 @@ class EventInfo extends React.Component<EventInfoProps, {}> {
   }
 }
 
-export default connect(mapStateToProps)(EventInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(EventInfo);

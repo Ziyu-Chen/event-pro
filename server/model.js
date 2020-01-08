@@ -77,7 +77,38 @@ const createEvent = event => {
     })
     .then(() => {
       return "success";
+    })
+    .catch(error => {
+      console.log(error);
+      return "failure";
     });
 };
 
-module.exports = { getUser, createUser, getEvents, createEvent };
+const updateEvent = event => {
+  return db
+    .table("events")
+    .update({
+      name: event.name,
+      category: event.category,
+      starting_date: event.startingDate,
+      ending_date: event.endingDate,
+      description: event.description,
+      photo_url: event.photoUrl,
+      country_code: event.countryCode,
+      city: event.city,
+      address: event.address,
+      price: event.price,
+      currency_code: event.currencyCode,
+      creator_id: event.creatorId
+    })
+    .where({ id: event.id })
+    .then(() => {
+      return "success";
+    })
+    .catch(error => {
+      console.log(error);
+      return "failure";
+    });
+};
+
+module.exports = { getUser, createUser, getEvents, createEvent, updateEvent };
