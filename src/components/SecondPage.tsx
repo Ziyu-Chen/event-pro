@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import BuildEvent from "./BuildEvent";
 
 // interface SecondPageProps{
 
@@ -15,7 +16,7 @@ class SecondPage extends React.Component<{}, {}> {
   render() {
     return (
       <div className="second-page">
-        Yes
+        <BuildEvent />
       </div>
     );
   }

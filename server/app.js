@@ -1,9 +1,9 @@
-const express = require("express")
-const { getUser, createUser } = require("./model")
-const path = require("path")
-const app = express()
-const bodyParser = require('body-parser');
-const atob = require("atob")
+const express = require("express");
+const { getUser, createUser, createEvent } = require("./model");
+const path = require("path");
+const app = express();
+const bodyParser = require("body-parser");
+const atob = require("atob");
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -18,40 +18,36 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
-app.use(express.static(path.join(__dirname, "..", 'build')));
-
-
-
+app.use(express.static(path.join(__dirname, "..", "build")));
 
 app.use(bodyParser.json());
 
 app.get("/api", async (req, res) => {
   try {
     res.send("Hi!").status(200);
-  } catch(e) {
+  } catch (e) {
     res.sendStaus(500);
   }
-})
-
+});
 
 app.get("/api/users", async (req, res) => {
   try {
-    const [email, password] = atob(req.headers.authorization.slice(6)).split(":")
+    const [email, password] = atob(req.headers.authorization.slice(6)).split(
+      ":"
+    );
     console.log(req.headers.authorization);
     const response = await getUser(email, password);
     if (response.length === 1) {
       const user = response[0];
       res.json(user).status(200);
     } else {
-      res.sendStatus(401)
+      res.sendStatus(401);
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     res.sendStatus(500);
   }
-})
+});
 
 app.post("/api/users", async (req, res) => {
   try {
@@ -59,20 +55,34 @@ app.post("/api/users", async (req, res) => {
     const response = await createUser(user);
     const createdUser = response[0];
     if (createdUser.email === user.email) {
-      res.sendStatus(201)
+      res.sendStatus(201);
     } else {
-      console.log("there's something wrong!")
-    } 
-  } catch(err) {
-    console.log(err)
-    if (err.constraint === "users_email_unique") {
-      res.sendStatus(409)
-    } else {
-      res.sendStatus(500)
+      console.log("there's something wrong!");
     }
-    
+  } catch (err) {
+    console.log(err);
+    if (err.constraint === "users_email_unique") {
+      res.sendStatus(409);
+    } else {
+      res.sendStatus(500);
+    }
   }
-})
+});
 
+app.post("/api/events", async (req, res) => {
+  try {
+    const event = req.body;
+    console.log(event);
+    const response = await createEvent(event);
+    if (response === "success") {
+      res.sendStatus(201);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
 
-module.exports = app
+module.exports = app;
