@@ -31,7 +31,8 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "start": "react-scripts start",
+    "start": "yarn serve",
+    "hack": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "node server/index.js",
