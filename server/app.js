@@ -4,7 +4,8 @@ const {
   createUser,
   getEvents,
   createEvent,
-  updateEvent
+  updateEvent,
+  deleteEvent
 } = require("./model");
 const path = require("path");
 const app = express();
@@ -115,6 +116,22 @@ app.put("/api/events", async (req, res) => {
     const response = await updateEvent(event);
     if (response === "success") {
       res.sendStatus(201);
+    } else {
+      res.sendStatus(500);
+    }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
+
+app.delete("/api/events/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const response = await deleteEvent(id);
+    if (response === "success") {
+      res.sendStatus(200);
     } else {
       res.sendStatus(500);
     }

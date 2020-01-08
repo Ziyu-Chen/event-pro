@@ -111,4 +111,25 @@ const updateEvent = event => {
     });
 };
 
-module.exports = { getUser, createUser, getEvents, createEvent, updateEvent };
+const deleteEvent = id => {
+  return db
+    .table("events")
+    .delete()
+    .where({ id })
+    .then(() => {
+      return "success";
+    })
+    .catch(error => {
+      console.log(error);
+      return "failure";
+    });
+};
+
+module.exports = {
+  getUser,
+  createUser,
+  getEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent
+};
