@@ -3,8 +3,10 @@ import {
   State,
   SET_USER,
   TOGGLE_LOGIN,
+  SHOW_EVENT_INFO,
   SET_EVENTS,
-  SET_EDITTED_EVENT
+  SET_EDITTED_EVENT,
+  SHOW_BUILD_EVENT
 } from "./types";
 
 const initialState: State = {
@@ -20,6 +22,8 @@ const initialState: State = {
   events: [],
   loggedIn: false,
   showLogin: true,
+  showEventInfo: true,
+  showBuildEvent: false,
   edittedEventId: 0
 };
 
@@ -38,6 +42,22 @@ function reducer(state: State = initialState, action: any): State {
         showLogin: !state.showLogin
       };
     }
+    case SHOW_EVENT_INFO: {
+      return {
+        ...state,
+        showEventInfo: true,
+        showBuildEvent: false,
+        edittedEventId: 0
+      };
+    }
+    case SHOW_BUILD_EVENT: {
+      return {
+        ...state,
+        showEventInfo: false,
+        showBuildEvent: true,
+        edittedEventId: 0
+      };
+    }
     case SET_EVENTS: {
       return {
         ...state,
@@ -47,6 +67,8 @@ function reducer(state: State = initialState, action: any): State {
     case SET_EDITTED_EVENT: {
       return {
         ...state,
+        showEventInfo: false,
+        showBuildEvent: false,
         edittedEventId: action.payload
       };
     }

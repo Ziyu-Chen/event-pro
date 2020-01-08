@@ -4,7 +4,9 @@ import {
   SET_USER,
   TOGGLE_LOGIN,
   SET_EVENTS,
-  SET_EDITTED_EVENT
+  SET_EDITTED_EVENT,
+  SHOW_EVENT_INFO,
+  SHOW_BUILD_EVENT
 } from "./types";
 
 export const setUser = (user: User) => ({
@@ -14,6 +16,14 @@ export const setUser = (user: User) => ({
 
 export const toggleLogin = () => ({
   type: TOGGLE_LOGIN
+});
+
+export const showEventInfo = () => ({
+  type: SHOW_EVENT_INFO
+});
+
+export const showBuildEvent = () => ({
+  type: SHOW_BUILD_EVENT
 });
 
 export const setEvents = (events: Event[]) => ({

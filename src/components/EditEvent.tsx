@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
 import categories from "../data/categories.json";
 import axios from "axios";
-import { setEvents } from "../store/actions";
+import { setEvents, setEdittedEvent } from "../store/actions";
 
 interface EditEventState {
   name: string;
@@ -44,6 +44,7 @@ interface EditEventProps {
   events: Event[];
   edittedEventId: number;
   getEvents: (email: string, password: string) => Promise<number>;
+  setEdittedEvent: () => void;
 }
 
 const mapStateToProps = (state: State) => ({
@@ -71,7 +72,8 @@ const mapDispatchToProps = (dispatch: any) => ({
         console.log(error.response);
         return error.response.status;
       });
-  }
+  },
+  setEdittedEvent: () => dispatch(setEdittedEvent(0))
 });
 
 class EditEvent extends React.Component<EditEventProps, EditEventState> {
@@ -191,6 +193,7 @@ class EditEvent extends React.Component<EditEventProps, EditEventState> {
               this.state.currencyCode,
               this.props.id
             );
+            this.props.setEdittedEvent();
           }}
         >
           <TextValidator

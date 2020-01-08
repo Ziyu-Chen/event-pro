@@ -30,12 +30,18 @@ export interface State {
   events: Event[];
   loggedIn: boolean;
   showLogin: boolean;
+  showEventInfo: boolean;
+  showBuildEvent: boolean;
   edittedEventId: number;
 }
 
 export const SET_USER = "SET_USER";
 
 export const TOGGLE_LOGIN = "TOGGLE_LOGIN";
+
+export const SHOW_EVENT_INFO = "SHOW_EVENT_INFO";
+
+export const SHOW_BUILD_EVENT = "SHOW_BUILD_EVENT";
 
 export const SET_EVENTS = "SET_EVENTS";
 
