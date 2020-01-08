@@ -248,7 +248,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.handleDialogToggle()}
+              onClick={() => {
+                this.handleDialogToggle();
+                this.props.toggleLogin();
+              }}
               variant="contained"
               color="primary"
             >

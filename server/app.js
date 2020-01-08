@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUser, createUser, createEvent } = require("./model");
+const { getUser, createUser, getEvents, createEvent } = require("./model");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
@@ -66,6 +66,23 @@ app.post("/api/users", async (req, res) => {
     } else {
       res.sendStatus(500);
     }
+  }
+});
+
+app.get("/api/events/", async (req, res) => {
+  try {
+    const [email, password] = atob(req.headers.authorization.slice(6)).split(
+      ":"
+    );
+    const response1 = await getUser(email, password);
+    const user = response1[0];
+    console.log(user.id);
+    const response2 = await getEvents(user.id);
+    console.log(response2);
+    res.json(response2);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
   }
 });
 

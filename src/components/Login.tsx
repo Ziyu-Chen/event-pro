@@ -11,7 +11,7 @@ import {
   Link
 } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import { setUser, toggleLogin } from "../store/actions";
+import { setUser, toggleLogin, setEvents } from "../store/actions";
 import axios from "axios";
 import { connect } from "react-redux";
 
@@ -24,6 +24,7 @@ interface LoginState {
 
 interface LoginProps {
   getUser: (email: string, password: string) => Promise<number>;
+  getEvents: (email: string, password: string) => Promise<number>;
   toggleLogin: () => void;
 }
 
@@ -41,6 +42,24 @@ const mapDispatchToProps = (dispatch: any) => ({
         return response.status;
       })
       .catch(error => {
+        return error.response.status;
+      });
+  },
+  getEvents: (email: string, password: string) => {
+    const basicAuth = "Basic " + btoa(email + ":" + password);
+    console.log(basicAuth);
+    return axios({
+      method: "get",
+      url: `/api/events`,
+      headers: { authorization: basicAuth }
+    })
+      .then(response => {
+        console.log(response.data);
+        dispatch(setEvents(response.data));
+        return response.status;
+      })
+      .catch(error => {
+        console.log(error.response);
         return error.response.status;
       });
   },
@@ -63,6 +82,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   handleSubmit = async (email: string, password: string) => {
     const statusCode = await this.props.getUser(email, password);
     if (statusCode === 200) {
+      this.props.getEvents(this.state.email, this.state.password);
     } else if (statusCode === 401) {
       this.setState({
         password: "",

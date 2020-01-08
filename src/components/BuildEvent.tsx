@@ -15,7 +15,7 @@ import {
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { User, State } from "../store/types";
 import { connect } from "react-redux";
-import countriesToCurrencies from "../data/countriesToCurrency.json";
+import countriesToCurrencies from "../data/countriesToCurrencies.json";
 import categories from "../data/categories.json";
 import axios from "axios";
 
@@ -31,6 +31,9 @@ interface BuildEventState {
   address: string;
   price: number;
   currencyCode: string;
+  succeeded: boolean;
+  failed: boolean;
+  error: string;
 }
 
 interface BuildEventProps {
@@ -55,7 +58,10 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
       city: "",
       address: "",
       price: 0,
-      currencyCode: ""
+      currencyCode: "",
+      succeeded: false,
+      failed: false,
+      error: ""
     };
   }
   componentWillMount() {
@@ -77,6 +83,12 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
       return endingDate >= startingDate;
     });
   }
+  handleDialogToggle = () => {
+    this.setState({
+      succeeded: false,
+      failed: false
+    });
+  };
   handleSubmit = (
     name: string,
     category: string,
@@ -112,13 +124,14 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
     })
       .then(response => {
         if (response.status === 201) {
-          console.log("success");
+          this.setState({ succeeded: true });
         }
       })
       .catch(error => {
-        if (error.response.status === 500) {
-          console.log("failed");
-        }
+        this.setState({
+          failed: true,
+          error: "Your event has not been created."
+        });
       });
   };
   render() {
@@ -339,6 +352,40 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
             <Button variant="contained">Submit</Button>
           )}
         </ValidatorForm>
+        <Dialog open={this.state.succeeded}>
+          <DialogTitle>Successfully Created</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Congratulations! You have successfully created an event!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.handleDialogToggle()}
+              variant="contained"
+              color="primary"
+            >
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={this.state.failed}>
+          <DialogTitle>Failed</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {this.state.error} Please try again!{" "}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.handleDialogToggle()}
+              variant="contained"
+              color="primary"
+            >
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }

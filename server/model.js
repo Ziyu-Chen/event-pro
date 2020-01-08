@@ -3,6 +3,15 @@ const db = require("./knex");
 const getUser = (email, password) => {
   return db
     .select()
+    .column(
+      "id",
+      "name",
+      "email",
+      "description",
+      "website",
+      { logoUrl: "logo_url" },
+      "password"
+    )
     .table("users")
     .where({ email: email, password: password });
 };
@@ -26,6 +35,29 @@ const createUser = user => {
     });
 };
 
+const getEvents = creatorId => {
+  return db
+    .table("events")
+    .column(
+      "id",
+      "name",
+      "category",
+      { createdAt: "created_at" },
+      { startingDate: "starting_date" },
+      { endingDate: "ending_date" },
+      "description",
+      { photoUrl: "photo_url" },
+      { countryCode: "country_code" },
+      "city",
+      "address",
+      "price",
+      { currencyCode: "currency_code" },
+      { creatorId: "creator_id" }
+    )
+    .select()
+    .where({ creator_id: creatorId });
+};
+
 const createEvent = event => {
   return db
     .table("events")
@@ -40,7 +72,7 @@ const createEvent = event => {
       city: event.city,
       address: event.address,
       price: event.price,
-      currency_code: event.countryCode,
+      currency_code: event.currencyCode,
       creator_id: event.creatorId
     })
     .then(() => {
@@ -48,4 +80,4 @@ const createEvent = event => {
     });
 };
 
-module.exports = { getUser, createUser, createEvent };
+module.exports = { getUser, createUser, getEvents, createEvent };
