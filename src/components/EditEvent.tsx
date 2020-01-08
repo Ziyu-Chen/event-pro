@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
 import categories from "../data/categories.json";
 import axios from "axios";
-import { setEvents, setEdittedEvent } from "../store/actions";
+import { setEvents, setEdittedEvent, showEventInfo } from "../store/actions";
 
 interface EditEventState {
   name: string;
@@ -44,7 +44,7 @@ interface EditEventProps {
   events: Event[];
   edittedEventId: number;
   getEvents: (email: string, password: string) => Promise<number>;
-  setEdittedEvent: () => void;
+  showEventInfo: () => void;
 }
 
 const mapStateToProps = (state: State) => ({
@@ -73,7 +73,7 @@ const mapDispatchToProps = (dispatch: any) => ({
         return error.response.status;
       });
   },
-  setEdittedEvent: () => dispatch(setEdittedEvent(0))
+  showEventInfo: () => dispatch(showEventInfo())
 });
 
 class EditEvent extends React.Component<EditEventProps, EditEventState> {
@@ -82,11 +82,12 @@ class EditEvent extends React.Component<EditEventProps, EditEventState> {
     const event = this.props.events.filter((event: Event) => {
       return event.id === this.props.edittedEventId;
     })[0];
+    console.log(event);
     this.state = {
       name: event.name,
       category: event.category,
-      startingDate: event.startingDate,
-      endingDate: event.endingDate,
+      startingDate: event.startingDate.slice(0, 10),
+      endingDate: event.endingDate.slice(0, 10),
       description: event.description,
       photoUrl: event.photoUrl,
       countryCode: event.countryCode,
@@ -193,7 +194,6 @@ class EditEvent extends React.Component<EditEventProps, EditEventState> {
               this.state.currencyCode,
               this.props.id
             );
-            this.props.setEdittedEvent();
           }}
         >
           <TextValidator
@@ -362,6 +362,15 @@ class EditEvent extends React.Component<EditEventProps, EditEventState> {
           ) : (
             <Button variant="contained">Submit</Button>
           )}
+          <br />
+          <br />
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.props.showEventInfo}
+          >
+            Cancel
+          </Button>
         </ValidatorForm>
         <Dialog open={this.state.succeeded}>
           <DialogTitle>Successfully Updated</DialogTitle>
@@ -372,7 +381,7 @@ class EditEvent extends React.Component<EditEventProps, EditEventState> {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.handleDialogToggle()}
+              onClick={this.props.showEventInfo}
               variant="contained"
               color="primary"
             >

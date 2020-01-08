@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
 import categories from "../data/categories.json";
 import axios from "axios";
-import { setEvents } from "../store/actions";
+import { setEvents, showEventInfo } from "../store/actions";
 
 interface BuildEventState {
   name: string;
@@ -41,6 +41,7 @@ interface BuildEventProps {
   email: string;
   password: string;
   getEvents: (email: string, password: string) => Promise<number>;
+  showEventInfo: () => void;
 }
 
 const mapStateToProps = (state: State) => ({
@@ -66,7 +67,8 @@ const mapDispatchToProps = (dispatch: any) => ({
         console.log(error.response);
         return error.response.status;
       });
-  }
+  },
+  showEventInfo: () => dispatch(showEventInfo())
 });
 
 class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
@@ -377,6 +379,15 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
           ) : (
             <Button variant="contained">Submit</Button>
           )}
+          <br />
+          <br />
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.props.showEventInfo}
+          >
+            Cancel
+          </Button>
         </ValidatorForm>
         <Dialog open={this.state.succeeded}>
           <DialogTitle>Successfully Created</DialogTitle>
@@ -387,7 +398,7 @@ class BuildEvent extends React.Component<BuildEventProps, BuildEventState> {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.handleDialogToggle()}
+              onClick={this.props.showEventInfo}
               variant="contained"
               color="primary"
             >
