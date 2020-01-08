@@ -10,11 +10,10 @@ import {
   DialogTitle,
   DialogContentText,
   DialogContent,
-  DialogActions,
-  CardMedia
+  DialogActions
 } from "@material-ui/core";
-import { User, State, Event } from "../store/types";
-import { toggleLogin, setEdittedEvent, setEvents } from "../store/actions";
+import { State, Event } from "../store/types";
+import { setEdittedEvent, setEvents } from "../store/actions";
 import { connect } from "react-redux";
 import moment from "moment";
 import countriesToCurrencies from "../data/countriesToCurrencies.json";
