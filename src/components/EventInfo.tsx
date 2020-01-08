@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Card,
+  CardHeader,
   CardContent,
   Typography,
   CardActions,
@@ -9,7 +10,8 @@ import {
   DialogTitle,
   DialogContentText,
   DialogContent,
-  DialogActions
+  DialogActions,
+  CardMedia
 } from "@material-ui/core";
 import { User, State, Event } from "../store/types";
 import { toggleLogin, setEdittedEvent, setEvents } from "../store/actions";
@@ -93,30 +95,42 @@ class EventInfo extends React.Component<EventInfoProps, EventInfoState> {
           <div key={event.id}>
             <br />
             <Card>
+              <CardHeader
+                title={event.name}
+                subheader={`${moment(event.startingDate).format(
+                  "YYYY[/]MM[/]DD"
+                )}-${moment(event.endingDate).format("YYYY[/]MM[/]DD")}`}
+              />
+              {event.photoUrl ? (
+                <img
+                  src={event.photoUrl}
+                  alt={event.name}
+                  style={{ height: "200px" }}
+                />
+              ) : null}
               <CardContent>
-                <Typography>{event.name}</Typography>
-                <Typography>{event.category}</Typography>
-                <Typography>
-                  {moment(event.startingDate).format("YYYY[/]MM[/]DD")}-
-                  {moment(event.endingDate).format("YYYY[/]MM[/]DD")}
+                <Typography align="left">
+                  {"Category: " + event.category}
                 </Typography>
-                <Typography>{event.description}</Typography>
-                <Typography>
-                  {
-                    countriesToCurrencies.filter(item => {
-                      return item.countryCode === event.countryCode;
-                    })[0].country
-                  }
+                <br />
+                <Typography align="left">
+                  {"Description: " + event.description}
                 </Typography>
-                <Typography>{event.city}</Typography>
-                <Typography>{event.address}</Typography>
-                <Typography>
-                  {event.price}{" "}
-                  {
+                <br />
+                <Typography align="left">{`Address: ${event.address}, ${
+                  event.city
+                }, ${
+                  countriesToCurrencies.filter(item => {
+                    return item.countryCode === event.countryCode;
+                  })[0].country
+                }`}</Typography>
+                <br />
+                <Typography align="left">
+                  {`Price: ${event.price} ${
                     countriesToCurrencies.filter(item => {
                       return item.currencyCode === event.currencyCode;
                     })[0].currency
-                  }
+                  }`}
                 </Typography>
               </CardContent>
               <CardActions>
