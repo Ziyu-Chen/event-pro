@@ -1,5 +1,7 @@
 Event-Pro is a web app for promoting different events.
 
+It is deployed to Heroku. Feel free to give it a try!
+
 ## Features:
 
 ### Sign in
